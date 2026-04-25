@@ -49,9 +49,9 @@ sudo chmod +x /usr/local/bin/tun2socks
 ### 2. Download the Script
 Clone this repository or download the script directly:
 ```bash
-git clone [https://github.com/YOUR_USERNAME/Vanguard-Global-Proxy.git](https://github.com/YOUR_USERNAME/Vanguard-Global-Proxy.git)
-cd Vanguard-Global-Proxy
-sudo chmod +x global-proxy.sh
+git clone [https://github.com/Cyberlowspecs/NetGrip-Tun.git]
+cd NetGrip-Tun
+sudo chmod +x netgrip-tun.sh
 ```
 
 ---
