@@ -75,7 +75,7 @@ That's it! Once started, all applications on your system (including Flatpaks and
 
 ---
 
-## ⚡ How to Use (Xray / V2Ray Users)
+## ⚡ How to Use (Xray Users)
 *Use this guide if you are running Xray-core locally. We must configure a bypass group so Xray itself doesn't get routed into the proxy, which would cause an infinite traffic loop.*
 
 ### Step 1: Create the bypass group
@@ -84,31 +84,21 @@ We need to create a dedicated Linux user group named `xray-direct`.
 sudo groupadd xray-direct
 ```
 
-### Step 2: Configure Xray to run under this group
-You must start your Xray client under this specific group so the firewall knows to let its traffic pass through normally.
+### Step 2: Run Xray under the bypass group
+To prevent the "infinite loop" that crashes your internet, you must start Xray using the `sg` (switch group) command. This tells the system that traffic from this specific command should bypass the proxy.
 
-**Method A: Running manually**
+Run this command in its own terminal window:
 ```bash
-sudo -g xray-direct xray run -c config.json
+sudo sg xray-direct -c "xray run -config /usr/local/etc/xray/config.json"
 ```
 
-**Method B: Systemd Service (Recommended)**
-If you run Xray as a background service, edit your systemd file. Open the file using `vim` (or your preferred editor):
-```bash
-sudo vim /etc/systemd/system/xray.service
-```
-Under the `[Service]` section, add the `Group` parameter:
-```ini
-[Service]
-...
-Group=xray-direct
-...
-```
-Then reload and restart the service:
-```bash
-sudo systemctl daemon-reload
-sudo systemctl restart xray
-```
+**📍 Finding your Config File**
+The path `/usr/local/etc/xray/config.json` used in the command above is a common default. However, your config file might be in a different place depending on how you installed Xray:
+* **Manual Install:** Often found in `/usr/local/etc/xray/config.json`.
+* **Package Managers:** Often found in `/etc/xray/config.json`.
+* **Portable/Folder:** If you just downloaded a folder, it is the `.json` file inside that folder.
+
+**Copy-Paste Tip:** Just replace the path inside the quotes with the actual location of your config file (e.g., `"/home/yourname/xray/config.json"`).
 
 ### Step 3: Start the Global Routing
 Now that Xray is safely bypassing the tunnel, start the script. (Assuming Xray's inbound SOCKS port is the default `10808`):
@@ -132,3 +122,7 @@ If your internet drops completely after starting the script:
    cat /var/log/tun2socks.log
    ```
 3. **Xray Users:** Ensure you correctly ran Xray under the `xray-direct` group. If Xray runs as `root` without the group flag, its traffic gets caught in the proxy loop and your internet will freeze. 
+
+## ⚖️ License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
