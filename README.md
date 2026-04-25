@@ -1,4 +1,4 @@
-# Vanguard Global Proxy Enforcer for Linux
+# NetGrip-Tun Global Proxy Enforcer for Linux
 
 **Force all Linux network traffic through a SOCKS5 proxy using tun2socks and iptables. A complete system-wide proxy enforcer.**
 
