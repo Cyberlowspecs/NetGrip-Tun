@@ -49,7 +49,7 @@ sudo chmod +x /usr/local/bin/tun2socks
 ### 2. Download the Script
 Clone this repository or download the script directly:
 ```bash
-git clone [https://github.com/Cyberlowspecs/NetGrip-Tun.git]
+git clone https://github.com/Cyberlowspecs/NetGrip-Tun.git
 cd NetGrip-Tun
 sudo chmod +x netgrip-tun.sh
 ```
@@ -62,13 +62,13 @@ sudo chmod +x netgrip-tun.sh
 **To Start the Proxy:**
 Run the script with `start`, followed by your Proxy IP and Port.
 ```bash
-sudo ./global-proxy.sh start 192.168.1.50 1080
+sudo ./netgrip-tun.sh start 192.168.1.50 1080
 ```
-*(If you run `sudo ./global-proxy.sh start` without an IP and port, it defaults to `127.0.0.1` and `10808`)*.
+*(If you run `sudo ./netgrip-tun.sh start` without an IP and port, it defaults to `127.0.0.1` and `10808`)*.
 
 **To Stop the Proxy and Restore Normal Internet:**
 ```bash
-sudo ./global-proxy.sh stop
+sudo ./netgrip-tun.sh stop
 ```
 
 That's it! Once started, all applications on your system (including Flatpaks and Wine games) are now securely routed through your SOCKS5 proxy.
@@ -113,12 +113,12 @@ sudo systemctl restart xray
 ### Step 3: Start the Global Routing
 Now that Xray is safely bypassing the tunnel, start the script. (Assuming Xray's inbound SOCKS port is the default `10808`):
 ```bash
-sudo ./global-proxy.sh start
+sudo ./netgrip-tun.sh start
 ```
 
 To revert back to normal:
 ```bash
-sudo ./global-proxy.sh stop
+sudo ./netgrip-tun.sh stop
 ```
 
 ---
