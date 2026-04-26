@@ -8,6 +8,23 @@ PROXY_IP="${2:-127.0.0.1}"
 PROXY_PORT="${3:-10808}"
 LOG_FILE="/var/log/tun2socks.log"
 
+check_dependencies() {
+    local missing=()
+    for cmd in tun2socks ip iptables ip6tables; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            missing+=("$cmd")
+        fi
+    done
+    if [ ${#missing[@]} -ne 0 ]; then
+        echo "Error: Missing dependencies."
+        echo "Please ensure the following commands are installed: ${missing[*]}"
+        echo "Hint: You may need to install packages like 'tun2socks', 'iproute2' (for ip), and 'iptables'."
+        exit 1
+    fi
+}
+
+check_dependencies
+
 if [ "$ACTION" == "stop" ]; then
     echo "Stopping global proxy..."
     pkill tun2socks
@@ -61,7 +78,12 @@ iptables -t mangle -A OUTPUT -d 10.0.0.0/8 -j RETURN
 iptables -t mangle -A OUTPUT -d 172.16.0.0/12 -j RETURN
 
 # 2. Proxy bypass group (crucial for Xray/V2Ray to avoid traffic loops)
-iptables -t mangle -A OUTPUT -m owner --gid-owner xray-direct -j RETURN
+if getent group xray-direct > /dev/null 2>&1; then
+    iptables -t mangle -A OUTPUT -m owner --gid-owner xray-direct -j RETURN
+else
+    echo "Notice: 'xray-direct' group not found. If you are a non-Xray user, you can safely ignore this."
+    echo "        If you use Xray/V2Ray, please create the group to avoid traffic loops."
+fi
 
 # 3. DNS routing
 iptables -t mangle -A OUTPUT -p udp --dport 53 -j MARK --set-mark 42
@@ -72,7 +94,9 @@ iptables -t mangle -A OUTPUT -j MARK --set-mark 42
 
 # IPv6 Rules (PREVENT LEAKS)
 # If your proxy config doesn't perfectly route IPv6, it is safer to drop it while the proxy is active.
-ip6tables -t mangle -A OUTPUT -m owner --gid-owner xray-direct -j RETURN
+if getent group xray-direct > /dev/null 2>&1; then
+    ip6tables -t mangle -A OUTPUT -m owner --gid-owner xray-direct -j RETURN
+fi
 ip6tables -t mangle -A OUTPUT -j DROP
 
 echo "Global proxy is active. Check ${LOG_FILE} if connection drops."
