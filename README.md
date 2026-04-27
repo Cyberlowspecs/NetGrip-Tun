@@ -42,7 +42,11 @@ You need the `tun2socks` binary to handle the actual traffic conversion.
 3. Extract it and move it to your system binaries so the script can find it:
 ```bash
 unzip tun2socks-linux-amd64.zip
+```
+```bash
 sudo mv tun2socks-linux-amd64 /usr/local/bin/tun2socks
+```
+```bash
 sudo chmod +x /usr/local/bin/tun2socks
 ```
 
@@ -50,7 +54,11 @@ sudo chmod +x /usr/local/bin/tun2socks
 Clone this repository or download the script directly:
 ```bash
 git clone https://github.com/Cyberlowspecs/NetGrip-Tun.git
+```
+```bash
 cd NetGrip-Tun
+```
+```bash
 sudo chmod +x netgrip-tun.sh
 ```
 
